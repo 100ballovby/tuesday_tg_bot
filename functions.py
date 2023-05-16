@@ -2,6 +2,7 @@ from jinja2 import Template
 import requests as r
 import os
 import random
+import datetime as dt
 
 
 def make_template(filename):
@@ -21,3 +22,28 @@ def send_meme():
     response = r.get('https://api.imgflip.com/get_memes').json()
     r_meme = random.choice(response['data']['memes'])
     return r_meme['url']
+
+
+def get_weather(lat, lon):
+    url = 'https://api.openweathermap.org/data/2.5/forecast'
+    params = {
+        'lat': lat,
+        'lon': lon,
+        'appid': os.environ.get('WEATHER_KEY'),
+        'units': 'metric',
+        'lang': 'ru',
+    }
+    response = r.get(url, params=params).json()
+    resp = ''
+    for data in response['list']:
+        date = dt.datetime.fromtimestamp(data['dt'])
+        date_res = date.strftime('%d.%m.%Y')
+        temp = data['main']['temp']
+        weather = data['weather'][0]['description']
+
+        if date.hour == 12:
+            daytime = 'днём'
+        elif date.hour == 21:
+            daytime = 'вечером'
+    return resp
+

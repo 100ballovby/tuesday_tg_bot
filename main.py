@@ -33,5 +33,20 @@ def send_meme(message):
     bot.send_photo(message.chat.id, photo=img)
 
 
+@bot.message_handler(commands=['weather'])
+def show_buttons(message):
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn = telebot.types.KeyboardButton('Поделиться локацией', request_location=True)
+    markup.add(btn)
+    bot.send_message(message.chat.id, 'Поделись со мной своей локацией, пожалуйста.', reply_markup=markup)
+
+
+@bot.message_handler(content_types=['location'])
+def send_weather(message):
+    if message.location is not None:
+        functions.get_weather(message.location.latitude, message.location.longitude)
+        bot.send_message(message.chat.id, message.location, reply_markup=telebot.types.ReplyKeyboardRemove())
+
+
 if __name__ == '__main__':
     bot.polling()
