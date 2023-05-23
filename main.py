@@ -1,6 +1,7 @@
 import os
 import telebot
 import functions
+import csv
 
 bot = telebot.TeleBot(os.environ.get('BOT_TOKEN'))
 
@@ -44,8 +45,30 @@ def show_buttons(message):
 @bot.message_handler(content_types=['location'])
 def send_weather(message):
     if message.location is not None:
-        functions.get_weather(message.location.latitude, message.location.longitude)
-        bot.send_message(message.chat.id, message.location, reply_markup=telebot.types.ReplyKeyboardRemove())
+        bot.send_message(message.chat.id, message.chat.id)
+        weather = functions.get_weather(message.location.latitude, message.location.longitude)
+        bot.send_message(message.chat.id, text=weather, parse_mode='html', reply_markup=telebot.types.ReplyKeyboardRemove())
+
+
+@bot.message_handler(commands=['register'])
+def get_contacts(message):
+    markup = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    btn = telebot.types.KeyboardButton('Отправить контакты', request_contact=True)
+    markup.add(btn)
+    bot.send_message(message.chat.id, 'Поделись со мной своими контактами',
+                     reply_markup=markup)
+
+
+@bot.message_handler(content_types=['contact'])
+def send_contact(message):
+    if message.contact is not None:
+        with open('contacts.csv', 'a') as file:
+            writer = csv.writer(file)
+            user = message.contact
+            writer.writerow([user.first_name + ' ' + user.last_name,
+                             user.phone_number, user.user_id])
+        bot.send_message(message.chat.id, 'Спасибо!',
+                         reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
 if __name__ == '__main__':

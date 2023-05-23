@@ -34,6 +34,7 @@ def get_weather(lat, lon):
         'lang': 'ru',
     }
     response = r.get(url, params=params).json()
+    text = '🗓️<strong>{}</strong> <i>{}</i>:\n{}°C, {}\n\n'
     resp = ''
     for data in response['list']:
         date = dt.datetime.fromtimestamp(data['dt'])
@@ -43,7 +44,9 @@ def get_weather(lat, lon):
 
         if date.hour == 12:
             daytime = 'днём'
+            resp += text.format(date_res, daytime, temp, weather)
         elif date.hour == 21:
             daytime = 'вечером'
+            resp += text.format(date_res, daytime, temp, weather)
     return resp
 
