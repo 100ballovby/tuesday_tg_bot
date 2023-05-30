@@ -50,3 +50,15 @@ def get_weather(lat, lon):
             resp += text.format(date_res, daytime, temp, weather)
     return resp
 
+
+def get_horo(sign):
+    url = f"https://horoscopes-ai.p.rapidapi.com/get_horoscope_en/{sign}/tomorrow/general"
+    print(url)
+    headers = {
+        "X-RapidAPI-Key": "4b3d784309msh1a54be2ab333712p1f580cjsn967b22d81802",
+        "X-RapidAPI-Host": "horoscopes-ai.p.rapidapi.com"
+    }
+    response = r.get(url, headers=headers)
+    res = response.json()
+    return res['general'][0]
+

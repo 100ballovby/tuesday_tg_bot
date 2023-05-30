@@ -71,5 +71,29 @@ def send_contact(message):
                          reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
+@bot.message_handler(commands=['horo'])
+def ask_zodiac(message):
+    signs = ['Aries ♈️', 'Taurus ♉️', 'Gemini ♊️', 'Cancer ♋️',
+             'Leo ♌️', 'Virgo ♍️', 'Libra ♎️', 'Scorpio ♏️',
+             'Sagittarius ♐️', 'Capricorn ♑️', 'Aquarius ♒️', 'Pisce ♓️']
+    markup = telebot.types.ReplyKeyboardMarkup(row_width=3)
+    buttons = [telebot.types.KeyboardButton(sign) for sign in signs]
+
+    markup.add(*buttons)
+    bot.send_message(message.chat.id, 'Выбери свой знак зодиака: ', reply_markup=markup)
+
+
+@bot.message_handler(content_types=['text'])
+def get_horo(message):
+    signs = ['Aries', 'Taurus', 'Gemini', 'Cancer',
+             'Leo', 'Virgo', 'Libra', 'Scorpio',
+             'Sagittarius', 'Capricorn', 'Aquarius', 'Pisce']
+    if message.text[:-3] in signs:
+        zodiac_sign = message.text[:-3]
+        res = functions.get_horo(zodiac_sign.lower())
+        bot.send_message(message.chat.id, text=res)
+
+
+
 if __name__ == '__main__':
     bot.polling()
