@@ -69,6 +69,7 @@ def send_contact(message):
                              user.phone_number, user.user_id])
         bot.send_message(message.chat.id, 'Спасибо!',
                          reply_markup=telebot.types.ReplyKeyboardRemove())
+        #TODO: fix me pls
 
 
 @bot.message_handler(commands=['horo'])
