@@ -60,5 +60,8 @@ def get_horo(sign):
     }
     response = r.get(url, headers=headers)
     res = response.json()
-    return res['general'][0]
+    try:
+        return res['general'][0]
+    except KeyError:
+        return 'Something wrong here...'
 

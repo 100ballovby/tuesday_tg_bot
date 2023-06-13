@@ -3,7 +3,7 @@ import telebot
 import functions
 import csv
 
-bot = telebot.TeleBot(os.environ.get('BOT_TOKEN'))
+bot = telebot.TeleBot('6078941315:AAFB5F4U6hgH1BquQI3TEKH7Mia5kBSLH-k' or os.environ.get('BOT_TOKEN'))
 
 
 @bot.message_handler(commands=['start'])
@@ -92,7 +92,7 @@ def get_horo(message):
     if message.text[:-3] in signs:
         zodiac_sign = message.text[:-3]
         res = functions.get_horo(zodiac_sign.lower())
-        bot.send_message(message.chat.id, text=res)
+        bot.send_message(message.chat.id, text=res, reply_markup=telebot.types.ReplyKeyboardRemove())
 
 
 
